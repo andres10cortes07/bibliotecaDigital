@@ -4,6 +4,7 @@ import com.example.usuarios.entities.Usuario;
 import com.example.usuarios.repository.UsuariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -17,6 +18,9 @@ public class UsuariosService implements IUsuariosService{
     @Autowired
     private UsuariosRepository usuariosRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     public List<Usuario> getAll(){return (List<Usuario>) usuariosRepository.findAll();}
 
     public Usuario getById(Long id) {
@@ -27,6 +31,9 @@ public class UsuariosService implements IUsuariosService{
 
     public Usuario create(Usuario newUser) {
         try {
+            // Encriptar la contraseña antes de guardar
+            String contrasenaEncriptada = passwordEncoder.encode(newUser.getContrasena());
+            newUser.setContrasena(contrasenaEncriptada);
             return usuariosRepository.save(newUser);
         }
         catch (DataIntegrityViolationException e) {

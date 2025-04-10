@@ -2,27 +2,27 @@
 GET http://localhost:8080/usuarios/getAll
 
 ### OBTENER USUARIO POR ID
-GET http://localhost:8080/usuarios/getById/5
+GET http://localhost:8080/usuarios/getById/2
 
 ### CREACION DE USUARIO
 POST http://localhost:8080/usuarios/create
 Content-Type: application/json
 
 {
-  "nombre" : "JUANITO",
-  "email": "JUANs@ucompensar.edu.co",
-  "telefono": "1111111",
-  "rol": "estudiante"
+  "nombre" : "Franklin",
+  "email": "andres10@ucompensar.edu.co",
+  "telefono": "3204031794",
+  "rol": "administrativo",
+  "contrasena" : "Contraseña"
 }
 
 ### EDICION DE USUARIO
-PATCH http://localhost:8080/usuarios/update/5
+PATCH http://localhost:8080/usuarios/update/1
 Content-Type: application/json
 
 {
-  "nombre" : "PEPITO PEREZ",
-  "telefono" : "32165465"
+  "nombre" : "Franklin"
 }
 
 ### ELIMINACION DE USUARIO
-DELETE http://localhost:8080/usuarios/delete/5
+DELETE http://localhost:8080/usuarios/delete/1

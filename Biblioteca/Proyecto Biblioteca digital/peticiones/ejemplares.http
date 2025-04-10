@@ -1,0 +1,35 @@
+### OBTENER TODOS LOS EJEMPLARES
+GET http://localhost:8080/ejemplares/getAll
+
+### OBTENER EJEMPLAR POR ID
+GET http://localhost:8080/ejemplares/getById/1
+
+### OBTENER EJEMPLAR POR ID DE SU RECURSO
+GET http://localhost:8080/ejemplares/getByResourceId/1
+
+### CREACION DE EJEMPLAR RELACIONANDOLO A SU RECURSO
+POST http://localhost:8080/ejemplares/create
+Content-Type: application/json
+
+{
+  "recurso": {
+    "id": 1
+  },
+  "codigo_ejemplar": "zzzz",
+  "estado": "disponible"
+}
+
+### EDICION DE EJEMPLAR
+PATCH http://localhost:8080/ejemplares/update/1
+Content-Type: application/json
+
+{
+  "recurso": {
+    "id": 2
+  },
+  "codigo_ejemplar": "XHXH",
+  "estado": "prestado"
+}
+
+### ELIMINACION DE EJEMPLAR
+DELETE http://localhost:8080/ejemplares/delete/4

@@ -1,0 +1,42 @@
+### OBTENER TODOS LOS RESERVAS
+GET http://localhost:8080/reservas/getAll
+
+### OBTENER RESERVA POR ID
+GET http://localhost:8080/reservas/getById/3
+
+
+# ----------------- CONSULTAS ESPECIALES -----------------
+### OBTENER POR ID DEL EJEMPLAR (LIBRO FISICO)
+GET http://localhost:8080/reservas/getByCopyId/1
+
+### OBTENER POR ID DEL USUARIO
+GET http://localhost:8080/reservas/getByUserId/2
+
+# ----------------------------------
+
+### CREACION DE RESERVA
+POST http://localhost:8080/reservas/create
+Content-Type: application/json
+
+{
+  "ejemplar": {
+    "id": 3
+  },
+  "usuario": {
+    "id": 1
+  },
+  "fecha_reserva": "2024-10-01",
+  "estado" : "completada"
+}
+
+
+### MODIFICACION DE RESERVA
+PATCH http://localhost:8080/reservas/update/3
+Content-Type: application/json
+
+{
+  "estado" : "activa"
+}
+
+### ELIMINAR RESERVA
+DELETE http://localhost:8080/reservas/delete/3

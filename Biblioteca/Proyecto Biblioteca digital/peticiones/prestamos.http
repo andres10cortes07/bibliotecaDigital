@@ -1,0 +1,43 @@
+### OBTENER TODOS LOS PRESTAMOS
+GET http://localhost:8080/prestamos/getAll
+
+### OBTENER PRESTAMO POR ID
+GET http://localhost:8080/prestamos/getById/1
+
+
+# ----------------- CONSULTAS ESPECIALES -----------------
+### OBTENER POR ID DEL EJEMPLAR (LIBRO FISICO)
+GET http://localhost:8080/prestamos/getByCopyId/1
+
+### OBTENER POR ID DEL USUARIO
+GET http://localhost:8080/prestamos/getByUserId/2
+
+# ----------------------------------
+
+### CREACION DE PRESTAMO
+POST http://localhost:8080/prestamos/create
+Content-Type: application/json
+
+{
+  "ejemplar": {
+    "id": 3
+  },
+  "usuario": {
+    "id": 1
+  },
+  "fecha_prestamo": "2025-04-10",
+  "fecha_devolucion": "2025-05-20",
+  "estado": "activo"
+}
+
+
+### MODIFICACION DE PRESTAMO
+PATCH http://localhost:8080/prestamos/update/1
+Content-Type: application/json
+
+{
+  "estado" : "atrasado"
+}
+
+### ELIMINAR PRESTAMO
+DELETE http://localhost:8080/prestamos/delete/1

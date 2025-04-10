@@ -1,0 +1,30 @@
+### OBTENER TODOS LOS RECURSOS
+GET http://localhost:8080/recursos/getAll
+
+### OBTENER RECURSO POR ID
+GET http://localhost:8080/recursos/getById/1
+
+### CREACION DE RECURSO
+POST http://localhost:8080/recursos/create
+Content-Type: application/json
+
+{
+  "titulo" : "Cien años de soledad",
+  "autor": "Gabriel Garcia Marquez",
+  "tipo_recurso": "libro",
+  "fecha_publicacion": "2008-08-01"
+}
+
+### EDICION DE RECURSO
+PATCH http://localhost:8080/recursos/update/1
+Content-Type: application/json
+
+{
+  "titulo" : "soledad",
+  "autor": "Marquez",
+  "tipo_recurso": "otro",
+  "fecha_publicacion": "2009-02-01"
+}
+
+### ELIMINACION DE RECURSO
+DELETE http://localhost:8080/recursos/delete/2

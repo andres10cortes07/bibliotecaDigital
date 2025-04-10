@@ -1,5 +1,6 @@
 package com.example.usuarios.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,6 +45,10 @@ public class Usuario {
     @Column(nullable = false, updatable = false)
     @JsonProperty("fecha_registro")
     private Date fechaRegistro;
+
+    @Column(nullable = false)
+    @JsonProperty(value = "contrasena", access = JsonProperty.Access.WRITE_ONLY)
+    private String contrasena;
 
 
     // CONFIGURACIONES PARA CAMPOS ESPECIALES

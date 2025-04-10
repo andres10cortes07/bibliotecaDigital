@@ -1,4 +1,7 @@
 package com.example.recursos.repository;
 
-public interface RecursosRepository {
+import com.example.recursos.entities.Recurso;
+import org.springframework.data.repository.CrudRepository;
+
+public interface RecursosRepository extends CrudRepository<Recurso, Long> {
 }
