@@ -10,7 +10,7 @@ GET http://localhost:8080/reservas/getById/3
 GET http://localhost:8080/reservas/getByCopyId/1
 
 ### OBTENER POR ID DEL USUARIO
-GET http://localhost:8080/reservas/getByUserId/2
+GET http://localhost:8080/reservas/getByUserId/125655612
 
 # ----------------------------------
 
@@ -20,10 +20,10 @@ Content-Type: application/json
 
 {
   "ejemplar": {
-    "id": 3
+    "id": 1
   },
   "usuario": {
-    "id": 1
+    "id": 125655612
   },
   "fecha_reserva": "2024-10-01",
   "estado" : "completada"

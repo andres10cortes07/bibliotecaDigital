@@ -19,8 +19,7 @@ import java.util.Date;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     @JsonProperty("id")
     private Long id;
 

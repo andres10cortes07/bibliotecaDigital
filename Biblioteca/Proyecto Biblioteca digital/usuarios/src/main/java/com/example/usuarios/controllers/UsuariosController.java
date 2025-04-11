@@ -1,12 +1,16 @@
 package com.example.usuarios.controllers;
 
+import com.example.usuarios.dto.LoginRequest;
 import com.example.usuarios.entities.Usuario;
+import com.example.usuarios.security.JwtUtil;
 import com.example.usuarios.services.IUsuariosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +20,36 @@ public class UsuariosController {
 
     @Autowired
     private IUsuariosService usuariosService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
+        String email = loginRequest.get("email");
+        String contrasena = loginRequest.get("contrasena");
+        return usuariosService.login(email, contrasena);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@RequestBody Usuario newUser) {
+        try {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            newUser.setContrasena(encoder.encode(newUser.getContrasena()));
+
+            Usuario usuario = usuariosService.create(newUser);
+
+            String token = jwtUtil.generateToken(usuario.getEmail()); // Asegúrate de tener JwtUtil con generateToken
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("token", token);
+            body.put("usuario", usuario);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(body);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
     @GetMapping("/getAll")
     public List<Usuario> getAll() {return usuariosService.getAll();
@@ -29,16 +63,6 @@ public class UsuariosController {
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody Usuario newUser){
-        try {
-            Usuario usuario = usuariosService.create(newUser);
-            return ResponseEntity.status(201).body(usuario);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -67,4 +91,6 @@ public class UsuariosController {
            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+
 }

@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <name>Biblioteca Digital - Proyecto Principal</name>
 
-
+    <!-- Submódulos del proyecto -->
     <modules>
         <module>api-gateway</module>
         <module>usuarios</module>
@@ -21,6 +21,7 @@
         <module>app</module>
     </modules>
 
+    <!-- Propiedades comunes del proyecto -->
     <properties>
         <java.version>17</java.version>
         <spring-boot.version>3.1.4</spring-boot.version>
@@ -28,6 +29,7 @@
         <mysql.version>8.0.33</mysql.version>
     </properties>
 
+    <!-- Gestión centralizada de dependencias -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -47,6 +49,7 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- Configuración de plugins comunes -->
     <build>
         <pluginManagement>
             <plugins>

@@ -1,27 +1,37 @@
+### LOGIN DE USUARIO
+POST http://localhost:8080/usuarios/login
+Content-Type: application/json
+
+{
+  "email": "andres10@ucompensar.edu.co",
+  "contrasena": "123456"
+}
+
+### REGISTRO DE USUARIO
+POST http://localhost:8080/usuarios/create
+Content-Type: application/json
+
+{
+  "id": 125655612,
+  "nombre": "Franklin",
+  "email": "andres10@ucompensar.edu.co",
+  "telefono": "3204031794",
+  "rol": "administrativo",
+  "contrasena": "123456"
+}
+
 ### OBTENER TODOS LOS USUARIOS
 GET http://localhost:8080/usuarios/getAll
 
 ### OBTENER USUARIO POR ID
 GET http://localhost:8080/usuarios/getById/2
 
-### CREACION DE USUARIO
-POST http://localhost:8080/usuarios/create
-Content-Type: application/json
-
-{
-  "nombre" : "Franklin",
-  "email": "andres10@ucompensar.edu.co",
-  "telefono": "3204031794",
-  "rol": "administrativo",
-  "contrasena" : "Contraseña"
-}
-
 ### EDICION DE USUARIO
 PATCH http://localhost:8080/usuarios/update/1
 Content-Type: application/json
 
 {
-  "nombre" : "Franklin"
+  "nombre": "Franklin"
 }
 
 ### ELIMINACION DE USUARIO

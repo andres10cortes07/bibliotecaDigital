@@ -9,7 +9,7 @@
         <groupId>com.example</groupId>
         <artifactId>biblioteca-digital</artifactId>
         <version>1.0.0</version>
-        <relativePath>../app/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath> <!-- o ajustar según la ubicación -->
     </parent>
 
     <artifactId>reservas</artifactId>

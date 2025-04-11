@@ -10,7 +10,7 @@ GET http://localhost:8080/prestamos/getById/1
 GET http://localhost:8080/prestamos/getByCopyId/1
 
 ### OBTENER POR ID DEL USUARIO
-GET http://localhost:8080/prestamos/getByUserId/2
+GET http://localhost:8080/prestamos/getByUserId/125655612
 
 # ----------------------------------
 
@@ -20,10 +20,10 @@ Content-Type: application/json
 
 {
   "ejemplar": {
-    "id": 3
+    "id": 1
   },
   "usuario": {
-    "id": 1
+    "id": 125655612
   },
   "fecha_prestamo": "2025-04-10",
   "fecha_devolucion": "2025-05-20",

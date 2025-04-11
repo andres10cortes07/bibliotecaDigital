@@ -1,6 +1,7 @@
 package com.example.usuarios.services;
 
 import com.example.usuarios.entities.Usuario;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -16,4 +17,6 @@ public interface IUsuariosService {
     Usuario update(Long id, Map<String, Object> dataUpdated);
 
     void delete (Long id);
+
+    ResponseEntity<?> login(String email, String contrasena);
 }
