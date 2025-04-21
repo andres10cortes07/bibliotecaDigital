@@ -18,6 +18,24 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Prestamo {
 
+    public LocalDate getFechaPrestamo() {
+        return fecha_prestamo;
+    }
+
+    public void setFechaPrestamo(LocalDate fechaPrestamo) {
+        this.fecha_prestamo = fechaPrestamo;
+    }
+
+    // Getter para la fechaDevolucion
+    public LocalDate getFechaDevolucion() {
+        return fecha_devolucion;
+    }
+
+    // Setter para la fechaDevolucion
+    public void setFechaDevolucion(LocalDate fechaDevolucion) {
+        this.fecha_devolucion = fechaDevolucion;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)

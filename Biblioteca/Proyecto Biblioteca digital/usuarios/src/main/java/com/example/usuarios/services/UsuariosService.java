@@ -74,10 +74,19 @@ public class UsuariosService implements IUsuariosService{
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         dataUpdated.forEach((key, value) -> {
-            Field field = ReflectionUtils.findField(Usuario.class, key);
-            if (field != null) {
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, user, value);
+            if ("contrasena".equals(key)) {
+                // Comprobamos si el valor es de tipo String
+                if (value instanceof String) {
+                    String contrasena = (String) value;
+                    String contrasenaEncriptada = passwordEncoder.encode(contrasena);
+                    user.setContrasena(contrasenaEncriptada);
+                }
+            } else {
+                Field field = ReflectionUtils.findField(Usuario.class, key);
+                if (field != null) {
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field, user, value);
+                }
             }
         });
 

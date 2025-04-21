@@ -15,6 +15,8 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class PrestamosService implements IPrestamosService {
@@ -28,39 +30,100 @@ public class PrestamosService implements IPrestamosService {
     @Autowired
     private UsuariosRepository usuariosRepository;
 
-    public List<Prestamo> getAll() {return (List<Prestamo>) prestamosRepository.findAll();}
-
-    public Prestamo getById (Long id) {
-        return prestamosRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Prestamo no encontrado"));
+    public void verificarEstadoAtrasado(Prestamo prestamo) {
+        if (prestamo.getFechaDevolucion() != null && prestamo.getFechaDevolucion().isBefore(LocalDate.now())) {
+            prestamo.setEstado(Prestamo.Estado.atrasado);
+        }
     }
 
-    public List<Prestamo> getByUserId (Long userId) {
+
+    public List<Prestamo> getAll() {
+        // Convertimos el Iterable a List utilizando Collectors
+        List<Prestamo> prestamos = StreamSupport.stream(prestamosRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+
+        for (Prestamo prestamo : prestamos) {
+            verificarEstadoAtrasado(prestamo);
+        }
+
+        return prestamos;
+    }
+
+
+    public Prestamo getById(Long id) {
+        Prestamo prestamo = prestamosRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Préstamo no encontrado"));
+
+        verificarEstadoAtrasado(prestamo);
+
+        return prestamo;
+    }
+
+
+    public List<Prestamo> getByUserId(Long userId) {
         try {
-            return prestamosRepository.findByUsuario_Id(userId);
-        }
-        catch (DataIntegrityViolationException e){
-            throw new RuntimeException("error");
+            // Convertimos el Iterable a List utilizando Collectors
+            List<Prestamo> prestamos = StreamSupport.stream(prestamosRepository.findByUsuario_Id(userId).spliterator(), false)
+                    .collect(Collectors.toList());
+
+            // Verificamos si el préstamo está atrasado
+            for (Prestamo prestamo : prestamos) {
+                verificarEstadoAtrasado(prestamo);
+            }
+
+            return prestamos;
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Error al obtener los préstamos por usuario");
         }
     }
 
-    public List<Prestamo> getByCopyId (Long copyId) {
+
+    public List<Prestamo> getByCopyId(Long copyId) {
         try {
-            return prestamosRepository.findByEjemplar_Id(copyId);
-        }
-        catch (DataIntegrityViolationException e){
-            throw new RuntimeException("error");
+            List<Prestamo> prestamos = StreamSupport.stream(prestamosRepository.findByEjemplar_Id(copyId).spliterator(), false)
+                    .collect(Collectors.toList());
+
+            // Verificamos si el préstamo está atrasado
+            for (Prestamo prestamo : prestamos) {
+                verificarEstadoAtrasado(prestamo);
+            }
+
+            return prestamos;
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Error al obtener los préstamos por ejemplar");
         }
     }
+
 
     public Prestamo create(Prestamo newLoan) {
         try {
-            return prestamosRepository.save(newLoan);
-        }
-        catch (DataIntegrityViolationException e) {
+            // Guardamos el préstamo
+            Prestamo savedLoan = prestamosRepository.save(newLoan);
+
+            // Verificamos si el préstamo está atrasado
+            verificarEstadoAtrasado(savedLoan);
+
+            // Obtenemos el ejemplar relacionado
+            Ejemplar ejemplar = ejemplaresRepository.findById(newLoan.getEjemplar().getId())
+                    .orElseThrow(() -> new RuntimeException("Ejemplar no encontrado"));
+
+            // Dependiendo del estado del préstamo, actualizamos el estado del ejemplar
+            if (newLoan.getEstado() == Prestamo.Estado.activo) {
+                ejemplar.setEstado(Ejemplar.Estado.prestado);
+            } else if (newLoan.getEstado() == Prestamo.Estado.devuelto ||
+                    newLoan.getEstado() == Prestamo.Estado.atrasado) {
+                ejemplar.setEstado(Ejemplar.Estado.disponible);
+            }
+
+            ejemplaresRepository.save(ejemplar);
+
+            return savedLoan;
+
+        } catch (DataIntegrityViolationException e) {
             throw new RuntimeException("Campos inválidos");
         }
     }
+
 
     public Prestamo update(Long id, Map<String, Object> dataUpdated) {
         Prestamo prestamo = prestamosRepository.findById(id)
@@ -113,8 +176,26 @@ public class PrestamosService implements IPrestamosService {
             }
         }
 
-        return prestamosRepository.save(prestamo);
+        // Verificamos si el préstamo está atrasado después de actualizar los campos
+        verificarEstadoAtrasado(prestamo);
+
+        Prestamo updated = prestamosRepository.save(prestamo);
+
+        // ACTUALIZAR EL ESTADO DEL EJEMPLAR RELACIONADO
+        Ejemplar ejemplar = updated.getEjemplar();
+        if (ejemplar != null) {
+            if (updated.getEstado() == Prestamo.Estado.activo) {
+                ejemplar.setEstado(Ejemplar.Estado.prestado);
+            } else if (updated.getEstado() == Prestamo.Estado.devuelto ||
+                    updated.getEstado() == Prestamo.Estado.atrasado) {
+                ejemplar.setEstado(Ejemplar.Estado.disponible);
+            }
+            ejemplaresRepository.save(ejemplar);
+        }
+
+        return updated;
     }
+
 
     public void delete (Long id) {
         Prestamo prestamo = prestamosRepository.findById(id)
