@@ -46,6 +46,19 @@ public class UsuariosService implements IUsuariosService{
         return ResponseEntity.ok(usuario); // o devolver token si usas JWT
     }
 
+    public void cambiarContrasena (Long id, String actual, String nueva) {
+        Usuario usuario = usuariosRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!passwordEncoder.matches(actual, usuario.getContrasena())) {
+            throw new RuntimeException("La contraseña actual no es correcta");
+        }
+
+        usuario.setContrasena(passwordEncoder.encode(nueva));
+        usuariosRepository.save(usuario);
+    }
+
+
     public List<Usuario> getAll(){return (List<Usuario>) usuariosRepository.findAll();}
 
     public Usuario getById(Long id) {

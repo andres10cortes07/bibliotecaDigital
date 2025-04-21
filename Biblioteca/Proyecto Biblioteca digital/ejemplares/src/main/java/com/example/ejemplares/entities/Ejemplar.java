@@ -1,10 +1,9 @@
 package com.example.ejemplares.entities;
 
 import com.example.recursos.entities.Recurso;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
@@ -28,6 +27,7 @@ public class Ejemplar {
     private Recurso recurso;
 
     @Column(nullable = false, unique = true)
+    @Size(max = 50, message = "El código del ejemplar no debe exceder los 50 caracteres")
     @JsonProperty("codigo_ejemplar")
     private String codigo_ejemplar;
 

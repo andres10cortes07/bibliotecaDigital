@@ -2,15 +2,19 @@ package com.example.recursos.controllers;
 
 import com.example.recursos.entities.Recurso;
 import com.example.recursos.services.IRecursosService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@Validated
 @RequestMapping("/recursos")
 public class RecursosController {
 
@@ -33,10 +37,16 @@ public class RecursosController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody Recurso newResource){
+    public ResponseEntity<?> create(@Valid @RequestBody Recurso newResource, BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(result.getAllErrors().get(0).getDefaultMessage());
+        }
+
         try {
             Recurso recurso = recursosService.create(newResource);
-            return ResponseEntity.status(201).body(recurso);
+            return ResponseEntity.status(HttpStatus.CREATED).body(recurso);
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "email": "andres10@ucompensar.edu.co",
-  "contrasena": "123456"
+  "contrasena": "contraseñaNueva"
 }
 
 ### REGISTRO DE USUARIO
@@ -13,11 +13,19 @@ Content-Type: application/json
 
 {
   "id": 125655612,
-  "nombre": "Franklin",
-  "email": "andres10@ucompensar.edu.co",
+  "nombre": "FrankFranklinFranklinFranklinFranklinFranklinFranklinFranklinFranklinFranklinFranklinFranklinFranklinlin",
+  "email": "andres10ucompensar.edu.co",
   "telefono": "3204031794",
-  "rol": "administrativo",
-  "contrasena": "123456"
+  "rol": "administrativo"
+}
+
+### MODIFICACION DE CONTRASEÑA GENERADA POR LA DESEADA POR EL USUARIO
+PATCH http://localhost:8080/usuarios/cambiar-contrasena/125655612
+Content-Type: application/json
+
+{
+  "contrasenaActual" : "xxx",
+  "nuevaContrasena" : "contraseñaNueva"
 }
 
 ### OBTENER TODOS LOS USUARIOS
@@ -27,11 +35,11 @@ GET http://localhost:8080/usuarios/getAll
 GET http://localhost:8080/usuarios/getById/2
 
 ### EDICION DE USUARIO
-PATCH http://localhost:8080/usuarios/update/1
+PATCH http://localhost:8080/usuarios/update/125655612
 Content-Type: application/json
 
 {
-  "nombre": "Franklin"
+  "contrasena": "xxx"
 }
 
 ### ELIMINACION DE USUARIO

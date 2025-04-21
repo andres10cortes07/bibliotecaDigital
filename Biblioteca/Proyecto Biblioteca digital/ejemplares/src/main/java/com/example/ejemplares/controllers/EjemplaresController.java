@@ -2,15 +2,19 @@ package com.example.ejemplares.controllers;
 
 import com.example.ejemplares.entities.Ejemplar;
 import com.example.ejemplares.services.IEjemplaresService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@Validated
 @RequestMapping("/ejemplares")
 public class EjemplaresController {
 
@@ -43,12 +47,17 @@ public class EjemplaresController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody Ejemplar newCopy){
+    public ResponseEntity<?> create(@Valid @RequestBody Ejemplar newCopy, BindingResult result) {
+        if (result.hasErrors()) {
+            // Retorna el primer mensaje de error encontrado
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(result.getAllErrors().get(0).getDefaultMessage());
+        }
+
         try {
             Ejemplar ejemplar = ejemplaresService.create(newCopy);
             return ResponseEntity.status(201).body(ejemplar);
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

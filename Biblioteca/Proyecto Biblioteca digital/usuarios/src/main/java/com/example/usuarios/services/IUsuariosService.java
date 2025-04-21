@@ -19,4 +19,6 @@ public interface IUsuariosService {
     void delete (Long id);
 
     ResponseEntity<?> login(String email, String contrasena);
+
+    void cambiarContrasena (Long id, String actual, String nueva);
 }

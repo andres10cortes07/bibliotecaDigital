@@ -4,17 +4,23 @@ import com.example.usuarios.dto.LoginRequest;
 import com.example.usuarios.entities.Usuario;
 import com.example.usuarios.security.JwtUtil;
 import com.example.usuarios.services.IUsuariosService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.apache.commons.lang3.RandomStringUtils;
+
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@Validated
 @RequestMapping("/usuarios")
 public class UsuariosController {
 
@@ -31,19 +37,40 @@ public class UsuariosController {
         return usuariosService.login(email, contrasena);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody Usuario newUser) {
+    @PatchMapping("/cambiar-contrasena/{id}")
+    public ResponseEntity<?> cambiarContrasena(@PathVariable Long id, @RequestBody Map<String, String> body) {
         try {
+            String actual = body.get("contrasenaActual");
+            String nueva = body.get("nuevaContrasena");
+            usuariosService.cambiarContrasena(id, actual, nueva);
+            return ResponseEntity.ok("Contraseña actualizada correctamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@Valid @RequestBody Usuario newUser, BindingResult result) {
+        if (result.hasErrors()) {
+            // Obtiene el primer mensaje de error y lo devuelve
+            String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+        }
+
+
+        try {
+            String passwordGenerated = RandomStringUtils.randomAlphanumeric(10);
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            newUser.setContrasena(encoder.encode(newUser.getContrasena()));
+            newUser.setContrasena(encoder.encode(passwordGenerated));
 
             Usuario usuario = usuariosService.create(newUser);
 
-            String token = jwtUtil.generateToken(usuario.getEmail()); // Asegúrate de tener JwtUtil con generateToken
+            String token = jwtUtil.generateToken(usuario.getEmail());
 
             Map<String, Object> body = new HashMap<>();
             body.put("token", token);
             body.put("usuario", usuario);
+            body.put("contrasena_generada", passwordGenerated); // (Opcional)
 
             return ResponseEntity.status(HttpStatus.CREATED).body(body);
         } catch (RuntimeException e) {

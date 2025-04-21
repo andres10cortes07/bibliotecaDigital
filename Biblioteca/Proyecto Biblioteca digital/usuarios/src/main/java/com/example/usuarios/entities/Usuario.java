@@ -3,6 +3,7 @@ package com.example.usuarios.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.Date;
@@ -15,7 +16,6 @@ import java.util.Date;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Usuario {
 
     @Id
@@ -24,23 +24,26 @@ public class Usuario {
     private Long id;
 
     @Column(nullable = false)
+    @Size(max = 50, message = "El nombre no debe exceder los 50 caracteres")
     @JsonProperty("nombre")
     private String nombre;
 
     @Column(unique = true, nullable = false)
+    @Email(message = "El correo debe tener un formato válido")
     @JsonProperty("email")
     private String email;
 
     @Column(unique = true, nullable = false)
+    @Size(min = 6, max = 11, message = "El teléfono debe tener entre 6 y 11 caracteres")
     @JsonProperty("telefono")
     private String telefono;
 
-    @Enumerated(EnumType.STRING) // Guardar el enum como String en la base de datos
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @JsonProperty("rol")
     private Rol rol;
 
-    @Temporal(TemporalType.TIMESTAMP) // Define que es un timestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     @JsonProperty("fecha_registro")
     private Date fechaRegistro;
@@ -49,11 +52,9 @@ public class Usuario {
     @JsonProperty(value = "contrasena", access = JsonProperty.Access.WRITE_ONLY)
     private String contrasena;
 
-
-    // CONFIGURACIONES PARA CAMPOS ESPECIALES
-    @PrePersist //hace que se efectue antes de la creacion de un registro en la tabla
+    @PrePersist
     protected void onCreate() {
-        this.fechaRegistro = new Date(); // Asigna la fecha actual al crear el usuario
+        this.fechaRegistro = new Date();
     }
 
     public enum Rol {
