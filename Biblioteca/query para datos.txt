@@ -1,40 +1,31 @@
--- USUARIOS
-INSERT INTO usuarios (id, nombre, email, telefono, rol, contrasena) VALUES
-(1001, 'Franklin', 'franklin@correo.com', '3204031794', 'administrativo', 'pass1'),
-(1002, 'Lucía', 'lucia@correo.com', '3105678912', 'estudiante', 'pass2'),
-(1003, 'Carlos', 'carlos@correo.com', '3112345678', 'docente', 'pass3'),
-(1004, 'Ana', 'ana@correo.com', '3123456789', 'profesor', 'pass4'),
-(1005, 'Pedro', 'pedro@correo.com', '3134567890', 'profesor', 'pass5');
+-- Usuarios
+INSERT INTO usuarios (id, nombre, email, telefono, rol, fecha_registro, contrasena) VALUES
+(1, 'Laura Ríos', 'laura.rios@example.com', '3101234567', 'estudiante', '2024-01-01', 'password1'),
+(2, 'Carlos Pérez', 'carlos.perez@example.com', '3112345678', 'administrativo', '2024-01-02', 'password2'),
+(3, 'Ana Gómez', 'ana.gomez@example.com', '3123456789', 'profesor', '2024-01-03', 'password3');
 
--- RECURSOS
+-- Recursos
 INSERT INTO recursos (id, titulo, autor, tipo_recurso, fecha_publicacion) VALUES
-(1, 'Cien años de soledad', 'Gabriel Garcia Marquez', 'libro', '2008-08-01'),
-(2, 'La Odisea', 'Homero', 'libro', '1999-05-20'),
-(3, 'El Principito', 'Antoine de Saint-Exupéry', 'revista', '2010-01-15'),
-(4, 'Introducción a Java', 'James Gosling', 'manual', '2015-07-10'),
-(5, 'Tecnologías Web', 'Mozilla Foundation', 'otro', '2021-11-12');
+(1, 'Cien años de soledad', 'Gabriel García Márquez', 'libro', '1967-05-30'),
+(2, 'National Geographic Abril 2023', 'National Geographic Society', 'revista', '2023-04-01'),
+(3, 'Manual de usuario Linux', 'Richard Stallman', 'otro', NULL);
 
--- EJEMPLARES
+-- Ejemplares
 INSERT INTO ejemplares (id, recurso_id, codigo_ejemplar, estado) VALUES
-(1, 1, 'A001', 'disponible'),
-(2, 1, 'A002', 'prestado'),
-(3, 2, 'B001', 'reservado'),
-(4, 3, 'C001', 'disponible'),
-(5, 4, 'D001', 'prestado');
+(1, 1, 'LIB-001', 'prestado'),
+(2, 1, 'LIB-002', 'disponible'),
+(3, 2, 'REV-001', 'reservado'),
+(4, 3, 'OTR-001', 'disponible');
 
--- PRESTAMOS
-INSERT INTO prestamos (id, ejemplares, usuarios, fecha_prestamo, fecha_devolucion, estado) VALUES
-(1, 2, 1001, '2025-04-01', '2025-04-20', 'activo'),
-(2, 5, 1002, '2025-03-15', '2025-04-10', 'devuelto'),
-(3, 4, 1003, '2025-04-05', '2025-04-25', 'activo'),
-(4, 1, 1004, '2025-03-10', '2025-03-30', 'atrasado'),
-(5, 3, 1005, '2025-04-08', '2025-04-22', 'finalizado');
+-- Reservas
+INSERT INTO reservas (id, usuarios, ejemplares, fecha_reserva, estado) VALUES
+(1, 1, 3, '2024-04-15', 'activa'),
+(2, 3, 2, '2024-04-18', 'cancelada'),
+(3, 1, 4, '2024-04-10', 'completada');
 
--- RESERVAS
-INSERT INTO reservas (id, ejemplares, usuarios, fecha_reserva, estado) VALUES
-(1, 3, 1001, '2024-09-01', 'completada'),
-(2, 4, 1002, '2024-09-15', 'pendiente'),
-(3, 2, 1003, '2024-10-05', 'cancelada'),
-(4, 1, 1004, '2024-10-10', 'activa'),
-(5, 5, 1005, '2024-08-20', 'pendiente');
-
+-- Préstamos
+INSERT INTO prestamos (id, usuarios, ejemplares, fecha_prestamo, fecha_devolucion, estado) VALUES
+(1, 1, 2, '2024-04-01', '2024-04-10', 'devuelto'),
+(2, 2, 3, '2024-04-15', '2024-04-30', 'activo'),
+(3, 3, 4, '2024-03-20', '2024-04-05', 'devuelto'),
+(4, 1, 1, '2024-04-05', '2024-05-10', 'atrasado');
