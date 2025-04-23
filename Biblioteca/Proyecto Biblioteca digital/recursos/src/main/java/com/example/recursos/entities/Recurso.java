@@ -3,7 +3,6 @@ package com.example.recursos.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -26,16 +25,26 @@ public class Recurso {
     private Long id;
 
     @Column(nullable = false)
-    @Size(max = 50, message = "El título no debe exceder los 50 caracteres")
     @JsonProperty("titulo")
     private String titulo;
 
+    @Column
+    @JsonProperty("descripcion")
+    private String descripcion;
+
+    @Column
+    @JsonProperty("genero")
+    private String genero;
+
+    @Column
+    @JsonProperty("imagen")
+    private String imagen;
+
     @Column(nullable = false)
-    @Size(max = 50, message = "El autor no debe exceder los 50 caracteres")
     @JsonProperty("autor")
     private String autor;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) // Guardar el enum como String en la base de datos
     @Column(nullable = false)
     @JsonProperty("tipo_recurso")
     private Tipo tipo_recurso;
@@ -43,6 +52,7 @@ public class Recurso {
     @Column(nullable = true)
     @JsonProperty("fecha_publicacion")
     private LocalDate fecha_publicacion;
+
 
     public enum Tipo {
         libro, revista, otro
